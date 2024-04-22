@@ -63,4 +63,9 @@ public class FrontNoteService {
             }
         }
     }
+
+    public List<FrontNoteES> getContext(String keyC) {
+        List<FrontNoteES> list =  frontNoteESDao.findByContext(keyC);
+        return list;
+    }
 }

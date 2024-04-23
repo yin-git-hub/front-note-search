@@ -4,11 +4,14 @@ import com.yin.controller.MarkdownParserUtils;
 import com.yin.dao.FrontNoteESDao;
 import com.yin.pojo.FrontNoteES;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,8 +67,23 @@ public class FrontNoteService {
         }
     }
 
-    public List<FrontNoteES> getContext(String keyC) {
-        List<FrontNoteES> list =  frontNoteESDao.findByContext(keyC);
-        return list;
+    public List getContext(String keyC) {
+        List<SearchHit<FrontNoteES>> byContext = frontNoteESDao.findByContext(keyC);
+//        for (SearchHit<FrontNoteES> frontNoteESSearchHit : byContext) {
+//            List<String> context = frontNoteESSearchHit.getHighlightField("context");
+//            FrontNoteES content = frontNoteESSearchHit.getContent();
+//            System.out.println("=============================================================");
+//            for (int i=0;i<context.size();i++) {
+//                System.out.println(i);
+//                System.out.println(context.get(i));
+//            }
+//            System.out.println("=============================================================");
+//        }
+//        for (SearchHit<FrontNoteES> frontNoteESSearchHit : byContext) {
+//            System.out.println("=============================================================");
+//            System.out.println(frontNoteESSearchHit);
+//            System.out.println("=============================================================");
+//        }
+        return byContext;
     }
 }

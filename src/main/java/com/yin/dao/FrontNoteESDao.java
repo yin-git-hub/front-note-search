@@ -16,7 +16,8 @@ import java.util.Map;
 public interface FrontNoteESDao extends ElasticsearchRepository<FrontNoteES, String> {
 
     // 需要对查询参数进行分词处理，使用@Query注解来指定查询语句
-    @Query("{\"match\": {\"context\": \"?0\"}}")
+//    @Query("{\"match\": {\"context\": \"?0\"}}")
+    @Query("{\"match\": {\"context\": {\"query\": \"?0\",\"analyzer\": \"ik_max_word\"}}}")
     @Highlight(fields = {
             @HighlightField(name = "context", parameters = @HighlightParameters(preTags = {"<span style='color:red'>"}, postTags = {"</span>"}, numberOfFragments = 5))
     })

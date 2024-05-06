@@ -10,19 +10,18 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class FrontNoteService {
+    public static ExecutorService executorService = Executors.newFixedThreadPool(4);
     @Autowired
     FrontNoteESDao frontNoteESDao;
-    public void save(FrontNoteES frontNote) throws IOException {
-        String path = "C:/Users/11230/Desktop/htmlcssjs/frontNotes";
-        printDirByRecursive(new File(path));
 
+    public void save(String path) throws IOException {
+        printDirByRecursive(new File(path));
     }
 
     public void printDirByRecursive(File dir) throws IOException {
@@ -30,40 +29,42 @@ public class FrontNoteService {
         File[] files = dir.listFiles();
         //遍历这个数组，取出每个File对象
         if (files != null) {
+            int ii = 0;
             for (File f : files) {
-                if(f.isHidden()){
+                if (f.isHidden()) {
                     continue;
                 }
-                //判断这个File是否是一个文件，是：
-                if (f.isFile()&&(f.getName().toLowerCase().endsWith(".md")||f.getName().toLowerCase().endsWith(".html"))) {
-                    if(f.getName().toLowerCase().endsWith(".md")){
-                        System.out.println("start===="+f.getAbsolutePath());
+                if (f.isFile() && (f.getName().toLowerCase().endsWith(".md") || f.getName().toLowerCase().endsWith(".html"))) {
+                    if (f.getName().toLowerCase().endsWith(".md")) {
+                        System.out.println("start====" + f.getAbsolutePath());
                         List<String> list = MarkdownParserUtils.parseMarkdown(f.getAbsolutePath());
-                        System.out.println("list==="+list.size());
-                        for (int i=0;i<list.size();i++) {
-                            FrontNoteES frontNoteES = new FrontNoteES();
-                            frontNoteES.setId(f.getName()+"-"+i);
-                            frontNoteES.setContext(list.get(i));
-                            Pattern pattern = Pattern.compile("##.*");
-                            Matcher matcher = pattern.matcher(list.get(i));
-                            if (matcher.find()) {
-                                frontNoteES.setLocation(f.getPath()+"-"+matcher.group());
-                            } else {
+                        System.out.println("list===" + list.size());
+                            for (int i = 0; i < list.size(); i++) {
+                                FrontNoteES frontNoteES = new FrontNoteES();
+                                frontNoteES.setId(f.getName() + "-" + i);
+                                frontNoteES.setContext(list.get(i));
+                                frontNoteES.setLocation(f.getPath() + "-" + (i + 1));
+                                frontNoteESDao.save(frontNoteES);
                             }
-//                            System.out.println(frontNoteES);
-                            frontNoteESDao.save(frontNoteES);
-                        }
-                        System.out.println("end===="+f.getAbsolutePath());
-                    }
-                    if(f.getName().toLowerCase().endsWith(".html")){
+                        System.out.println("end====" + f.getAbsolutePath());
 
                     }
+                    if (f.getName().toLowerCase().endsWith(".html")) {
+
+                    }
+
                 } else {//否则就是一个目录，继续递归
                     //递归调用
-                    printDirByRecursive(f);
+                    try {
+                        printDirByRecursive(f);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
+
             }
+            System.out.println("total==="+ii);
         }
     }
 

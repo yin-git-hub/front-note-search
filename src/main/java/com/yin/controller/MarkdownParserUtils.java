@@ -20,19 +20,11 @@ public class MarkdownParserUtils {
     // 根据# ## ### 对 markdown 进行分段
     public static List<String> parseMarkdown(String filePath) {
         List<String> paragraphs = new ArrayList<>();
-        StringBuilder paragraphBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith("#")) {
-                    if (paragraphBuilder.length() > 0) {
-                        paragraphs.add(paragraphBuilder.toString());
-                        paragraphBuilder = new StringBuilder();
-                    }
-                }
+                StringBuilder paragraphBuilder = new StringBuilder();
                 paragraphBuilder.append(line).append("\n");
-            }
-            if (paragraphBuilder.length() > 0) {
                 paragraphs.add(paragraphBuilder.toString());
             }
         } catch (IOException e) {

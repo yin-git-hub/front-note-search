@@ -18,9 +18,10 @@ public class TTTestController {
     @Autowired
     FrontNoteService frontNoteService;
 
-    @GetMapping("/save")
-    public String sava() throws IOException {
-        frontNoteService.save(null);
+    @GetMapping("/save/{path}")
+    public String sava(@PathVariable("path") String path) throws IOException {
+        path = "C:/Users/11230/Desktop/htmlcssjs/frontNotes";
+        frontNoteService.save(path);
         return "success";
     }
 

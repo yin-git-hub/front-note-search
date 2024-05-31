@@ -20,8 +20,10 @@ public class TTTestController {
 
     @GetMapping("/save/{path}")
     public String sava(@PathVariable("path") String path) throws IOException {
-        path = "C:/Users/11230/Desktop/htmlcssjs/frontNotes";
+        path = "C:\\Users\\11230\\Desktop\\y\\Knowledge-Fragments\\notes\\frontNotes";
+        System.out.println("开始。");
         frontNoteService.save(path);
+        System.out.println("完成。");
         return "success";
     }
 

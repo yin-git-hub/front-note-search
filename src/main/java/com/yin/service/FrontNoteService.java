@@ -1,6 +1,6 @@
 package com.yin.service;
 
-import com.yin.controller.MarkdownParserUtils;
+import com.yin.utils.MarkdownParserUtils;
 import com.yin.dao.FrontNoteESDao;
 import com.yin.pojo.FrontNoteES;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class FrontNoteService {
@@ -29,30 +28,23 @@ public class FrontNoteService {
         File[] files = dir.listFiles();
         //遍历这个数组，取出每个File对象
         if (files != null) {
-            int ii = 0;
             for (File f : files) {
                 if (f.isHidden()) {
                     continue;
                 }
                 if (f.isFile() && (f.getName().toLowerCase().endsWith(".md") || f.getName().toLowerCase().endsWith(".html"))) {
                     if (f.getName().toLowerCase().endsWith(".md")) {
-                        System.out.println("start====" + f.getAbsolutePath());
                         List<String> list = MarkdownParserUtils.parseMarkdown(f.getAbsolutePath());
-                        System.out.println("list===" + list.size());
-                            for (int i = 0; i < list.size(); i++) {
-                                FrontNoteES frontNoteES = new FrontNoteES();
-                                frontNoteES.setId(f.getName() + "-" + i);
-                                frontNoteES.setContext(list.get(i));
-                                frontNoteES.setLocation(f.getPath() + "-" + (i + 1));
-                                frontNoteESDao.save(frontNoteES);
-                            }
-                        System.out.println("end====" + f.getAbsolutePath());
-
+                        for (int i = 0; i < list.size(); i++) {
+                            // 封装到ES先关的DAO
+                            FrontNoteES frontNoteES = new FrontNoteES();
+                            frontNoteES.setId(f.getName() + "-" + i);
+                            frontNoteES.setContext(list.get(i));
+                            frontNoteES.setLocation(f.getPath() + "-" + (i + 1));
+                            // 保存到ES
+                            frontNoteESDao.save(frontNoteES);
+                        }
                     }
-                    if (f.getName().toLowerCase().endsWith(".html")) {
-
-                    }
-
                 } else {//否则就是一个目录，继续递归
                     //递归调用
                     try {
@@ -61,10 +53,7 @@ public class FrontNoteService {
                         e.printStackTrace();
                     }
                 }
-
-
             }
-            System.out.println("total==="+ii);
         }
     }
 

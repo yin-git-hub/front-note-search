@@ -1,4 +1,4 @@
-package com.yin.controller;
+package com.yin.utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,10 +6,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * markdown分段
+ */
 public class MarkdownParserUtils {
 
     public static void main(String[] args) {
-        String filePath = "C:\\Users\\11230\\Desktop\\htmlcssjs\\frontNotes\\3.webAPI_and_数据可视化\\webapis_note_day1-day4.md";
+        String filePath = "C:\\Users\\11230\\Desktop\\y" +
+                "\\Knowledge-Fragments\\notes\\frontNotes\\1.css\\css.md";
         List<String> paragraphs = parseMarkdown(filePath);
         for (String paragraph : paragraphs) {
             System.out.println(paragraph);
@@ -22,6 +26,7 @@ public class MarkdownParserUtils {
         List<String> paragraphs = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
+            // 逐行分段
             while ((line = reader.readLine()) != null) {
                 StringBuilder paragraphBuilder = new StringBuilder();
                 paragraphBuilder.append(line).append("\n");

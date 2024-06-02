@@ -1,22 +1,26 @@
 <template>
   <div id="app">
-    <el-input v-model="input" placeholder="请输入内容"></el-input>
-    <span style="float: right">
-    <el-button>搜索</el-button>
-
-    </span>
+    <el-input @change="change" v-model="input" placeholder="请输入内容"></el-input>
     <vue-markdown :source="markdown"></vue-markdown>
   </div>
 </template>
 
 <script>
 import VueMarkdown from 'vue-markdown';
+import {ref} from "vue";
 
+const input = ref();
 export default {
   name: 'App',
+  methods: {
+    change() {
+      console.log(input.value)
+    }
+  },
   data() {
     return {
-      markdown: '# Hello, Vue Markdown!'
+      markdown: '# Hello, Vue Markdown!',
+      input: input
     }
   },
   components: {

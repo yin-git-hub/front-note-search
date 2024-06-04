@@ -40,7 +40,7 @@ public class FrontNoteService {
                             FrontNoteES frontNoteES = new FrontNoteES();
                             frontNoteES.setId(f.getName() + "-" + i);
                             frontNoteES.setContext(list.get(i));
-                            frontNoteES.setLocation(f.getPath() + "-" + (i + 1));
+                            frontNoteES.setLocation(f.getPath() + "   " + (i + 1));
                             // 保存到ES
                             frontNoteESDao.save(frontNoteES);
                         }

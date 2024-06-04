@@ -63,21 +63,7 @@ public class FrontNoteService {
 
     public List getContext(String keyC) {
         List<SearchHit<FrontNoteES>> byContext = frontNoteESDao.findByContext(keyC);
-//        for (SearchHit<FrontNoteES> frontNoteESSearchHit : byContext) {
-//            List<String> context = frontNoteESSearchHit.getHighlightField("context");
-//            FrontNoteES content = frontNoteESSearchHit.getContent();
-//            System.out.println("=============================================================");
-//            for (int i=0;i<context.size();i++) {
-//                System.out.println(i);
-//                System.out.println(context.get(i));
-//            }
-//            System.out.println("=============================================================");
-//        }
-//        for (SearchHit<FrontNoteES> frontNoteESSearchHit : byContext) {
-//            System.out.println("=============================================================");
-//            System.out.println(frontNoteESSearchHit);
-//            System.out.println("=============================================================");
-//        }
+
         return byContext;
     }
 }

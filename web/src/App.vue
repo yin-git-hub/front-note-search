@@ -1,16 +1,12 @@
 <template>
   <div id="app">
     <el-input @change="change" v-model="input" placeholder="请输入内容"></el-input>
-    <vue-markdown :source="markdown"></vue-markdown>
-    <el-card   class="box-card">
-      <div slot="header" class="clearfix">
-        <span>卡片名称</span>
-        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-      </div>
-      <div v-for="o in 4" :key="o" class="text item">
-        {{'列表内容 ' + o }}
-      </div>
-    </el-card>
+    <vue-markdown :source="input"></vue-markdown>
+
+    <div  v-for="item in result"  v-html="item.highlightFields.context[0]">
+
+  </div>
+
   </div>
 </template>
 
@@ -20,16 +16,15 @@ import {ref} from "vue";
 import  axios from "axios";
 
 const input = ref();
-const result = ref({
-  id:"",
-});
+const result = ref([]);
 export default {
   name: 'App',
   methods: {
     change() {
 
       axios.get('/getContext/'+input.value).then(resp=>{
-        console.log(resp)
+        console.log(resp.data)
+        result.value = resp.data
       })
     }
   },

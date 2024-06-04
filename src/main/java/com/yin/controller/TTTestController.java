@@ -21,7 +21,7 @@ public class TTTestController {
     @GetMapping("/save/{path}")
     @CrossOrigin
     public String sava(@PathVariable("path") String path) throws IOException {
-        path = "C:\\Users\\11230\\Desktop\\webpack+Vue基础课程资料";
+        path = "E:\\resources\\y\\notes\\frontNotes\\7.vue\\webpack+Vue基础课程资料";
         System.out.println("开始。");
         frontNoteService.save(path);
         System.out.println("完成。");

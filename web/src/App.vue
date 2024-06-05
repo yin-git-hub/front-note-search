@@ -1,11 +1,19 @@
 <template>
   <div id="app">
     <el-input @change="change" v-model="input" placeholder="请输入内容"></el-input>
-    <vue-markdown :source="input"></vue-markdown>
 
-    <div  v-for="item in result"  v-html="item.highlightFields.context[0]">
+    <div v-for="item in result" >
+      <div style="color: skyblue;margin: 5px">
+        {{item.location}}
+      </div>
+      <div style="border-style:double;margin-bottom: 30px ">
 
-  </div>
+        <vue-markdown breaks="false" style="  max-width: 1200px;margin-left:15px; margin-bottom: 10px"
+                      :source="item.context "></vue-markdown>
+      </div>
+    </div>
+
+
 
   </div>
 </template>
@@ -42,32 +50,9 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both
-}
-
-.box-card {
-  width: 480px;
+#app{
+  max-width: 1400px;
+  margin: 0 auto;
+  margin-top: 100px;
 }
 </style>

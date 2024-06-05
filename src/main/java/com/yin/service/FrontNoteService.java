@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -20,7 +21,6 @@ public class FrontNoteService {
     public void save(String path) throws IOException {
         printDirByRecursive(new File(path));
     }
-    static long lines = 0;
     public void printDirByRecursive(File dir) throws IOException {
 
         File[] files = dir.listFiles();
@@ -35,7 +35,6 @@ public class FrontNoteService {
                     if (f.getName().toLowerCase().endsWith(".md")) {
                         System.out.println("开始->"+f.getPath());
                         List<String> list = MarkdownParserUtils.parseMarkdown(f.getAbsolutePath());
-                        lines +=list.size();
                         for (int i = 0; i < list.size(); i++) {
                             // 封装到ES先关的DAO
                             FrontNoteES frontNoteES = new FrontNoteES();
@@ -46,7 +45,6 @@ public class FrontNoteService {
                             frontNoteESDao.save(frontNoteES);
                         }
                         System.out.println("完成->"+f.getPath());
-                        System.out.println("文档有"+list.size()+"行，共保存有"+ lines +"行");
                     }
                 } else {//否则就是一个目录，继续递归
                     //递归调用
@@ -63,7 +61,21 @@ public class FrontNoteService {
 
     public List getContext(String keyC) {
         List<SearchHit<FrontNoteES>> byContext = frontNoteESDao.findByContext(keyC);
+        LinkedList<FrontNoteES> searchHits = new LinkedList<>();
+        for (SearchHit<FrontNoteES> frontNoteESSearchHit : byContext) {
+            String context = frontNoteESSearchHit.getHighlightField("context").get(0);
+            String outSpan = context
+                    .replace("<span style='color:red'>","")
+                    .replace("</span>","");
+            String context1 = frontNoteESSearchHit.getContent().getContext().replace(outSpan,context);
 
-        return byContext;
+            FrontNoteES frontNoteES = new FrontNoteES();
+            frontNoteES.setId(frontNoteESSearchHit.getContent().getId());
+            frontNoteES.setContext(context1);
+            frontNoteES.setLocation(frontNoteESSearchHit.getContent().getLocation());
+            searchHits.add(frontNoteES);
+        }
+
+        return searchHits;
     }
 }

@@ -31,8 +31,8 @@ public class TTTestController {
 
     @GetMapping("/getContext/{keyC}")
     @CrossOrigin
-    public List<SearchHit<FrontNoteES>> getContext(@PathVariable("keyC") String keyC) throws IOException {
-        List<SearchHit<FrontNoteES>> list = frontNoteService.getContext(keyC);
+    public List<  FrontNoteES>  getContext(@PathVariable("keyC") String keyC) throws IOException {
+        List< FrontNoteES>  list = frontNoteService.getContext(keyC);
         return list;
     }
 }

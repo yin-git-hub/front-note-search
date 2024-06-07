@@ -27,9 +27,18 @@ public class MarkdownParserUtils {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             // 逐行分段
+            int count = 0;
+            StringBuilder paragraphBuilder = new StringBuilder();
             while ((line = reader.readLine()) != null) {
-                StringBuilder paragraphBuilder = new StringBuilder();
+                count++;
                 paragraphBuilder.append(line).append("\n");
+                if(count>=20){
+                    paragraphs.add(paragraphBuilder.toString());
+                    count = 0;
+                    paragraphBuilder = new StringBuilder();
+                }
+            }
+            if(line==null&&count!=0){
                 paragraphs.add(paragraphBuilder.toString());
             }
         } catch (IOException e) {
